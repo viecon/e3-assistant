@@ -1,0 +1,14 @@
+{
+  "name": "e3-assistant",
+  "private": true,
+  "description": "NYCU E3 LMS Assistant - Browser Extension + CLI + Claude Code Skills",
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter @e3/extension dev",
+    "dev:firefox": "pnpm --filter @e3/extension dev:firefox",
+    "cli": "pnpm --filter @e3/cli start"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}

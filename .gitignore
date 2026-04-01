@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.output/
+*.log
+sync-result.json
+stubs.json
+_check.js
+.wxt/
+.env
+bash.exe.stackdump

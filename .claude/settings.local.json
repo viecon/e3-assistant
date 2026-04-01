@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm --filter @e3/core build)",
+      "Bash(pnpm --filter @e3/cli build)",
+      "Bash(npx wxt:*)"
+    ]
+  }
+}
