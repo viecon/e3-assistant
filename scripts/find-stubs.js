@@ -31,13 +31,14 @@ for (const dir of fs.readdirSync(vault)) {
     });
 
     if (slides.length > 0) {
+      const slideExts = ['.pdf', '.pptx', '.ppt', '.docx', '.doc'];
       stubs.push({
         course: dir,
         chapter: baseName,
         notePath: filePath,
         noteSize: stat.size,
         pdfFiles: slides
-          .filter(s => s.endsWith('.pdf'))
+          .filter(s => slideExts.some(ext => s.toLowerCase().endsWith(ext)))
           .map(s => path.join(slidesDir, s)),
       });
     }

@@ -10,7 +10,7 @@ For EACH item in the array:
    - A bare stub (just title + slides link, under ~300 bytes) → generate full note
    - A note with partial content the student wrote → KEEP everything the student wrote, only ADD to empty sections or append missing topics
 
-2. **Read the PDF** from `pdfFiles` thoroughly. Extract ALL content from every slide.
+2. **Read the lecture slides** from `pdfFiles` (may be PDF or PPTX). Extract ALL content from every slide. For PPTX files that can't be read directly, infer content from the chapter title and course context.
 
 3. **Read these style references** and match their level of detail:
    - `C:/Users/twsha/Documents/GitHub/note/Memory and Storage Systems/L1 Storage Devices.md` (224 lines)
@@ -49,7 +49,6 @@ For EACH item in the array:
 
 ## Content Requirements (IMPORTANT - be thorough, NOT concise)
 
-- **Target length: 120-250 lines** per note (match the reference notes)
 - Cover EVERY topic from the slides, do not skip any slide
 - Include ALL definitions, formulas, algorithms, and key concepts
 - Use **tables** to compare/contrast (e.g., protocols, data structures, algorithms)
