@@ -9,3 +9,5 @@ _check.js
 .env
 bash.exe.stackdump
 packages/extension/bash.exe.stackdump
+packages/extension/.claude/
+.claude/settings.local.json

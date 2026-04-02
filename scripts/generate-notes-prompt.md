@@ -60,6 +60,7 @@ For EACH item in the array:
 - Use `code blocks` for commands, code, and packet formats
 - Use **bold** for key terms and important values
 - Add `---` horizontal rules between major sections
+- Use $$ to wrap LaTeX
 - Write in **Traditional Chinese** (繁體中文), keep English technical terms
 - If a slide has a diagram you can describe, describe the structure in text/table form
 - Never be vague - include specific numbers, values, and examples from the slides
