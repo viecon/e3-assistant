@@ -11,6 +11,7 @@ import {
 } from '@e3/core';
 import type { CourseSection } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth, tryRelogin, getVaultPath } from '../config.js';
+import { safeJoin, sanitizeFilename } from '../sanitize.js';
 
 // Vault path from ~/.e3.env or default
 
@@ -189,7 +190,10 @@ export function registerSyncCommand(program: Command): void {
           let sections: CourseSection[];
           try {
             sections = await getCourseContents(client, course.id);
-          } catch {
+          } catch (err: unknown) {
+            if (!jsonOutput) {
+              lectureSpinner.text = `${folderName}: 無法取得課程內容 (${err instanceof Error ? err.message : 'unknown'})`;
+            }
             continue;
           }
 
@@ -206,7 +210,7 @@ export function registerSyncCommand(program: Command): void {
                 if (!isSlideFile(content.filename)) continue;
 
                 allSlideFiles.push(content.filename);
-                const slidePath = join(slidesDir, content.filename);
+                const slidePath = safeJoin(slidesDir, content.filename);
 
                 if (existsSync(slidePath)) {
                   skippedSlides++;
@@ -282,7 +286,7 @@ export function registerSyncCommand(program: Command): void {
 
             if (noteExists) continue;
 
-            const notePath = join(courseDir, `${chapter.key}.md`);
+            const notePath = safeJoin(courseDir, `${sanitizeFilename(chapter.key)}.md`);
             if (existsSync(notePath)) continue;
 
             if (dryRun) {
@@ -342,7 +346,7 @@ export function registerSyncCommand(program: Command): void {
           const shortName = extractShortCourseName(a.courseName);
           const fileName = `${dateStr} ${shortName} ${a.name}.md`
             .replace(/[<>:"/\\|?*]/g, '_');
-          const filePath = join(calendarDir, fileName);
+          const filePath = safeJoin(calendarDir, fileName);
 
           if (existsSync(filePath)) {
             assignSkipped++;

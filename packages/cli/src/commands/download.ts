@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { MoodleClient, listCourseFiles, getEnrolledCourses } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { formatFileSize, printJson } from '../output.js';
+import { safeJoin } from '../sanitize.js';
 
 export function registerDownloadCommand(program: Command): void {
   program
@@ -68,7 +69,7 @@ export function registerDownloadCommand(program: Command): void {
           const dlSpinner = ora(`[${downloaded + failed + 1}/${files.length}] ${file.filename}`).start();
           try {
             const buffer = await client.downloadFile(file.fileurl);
-            const filePath = join(outputDir, file.filename);
+            const filePath = safeJoin(outputDir, file.filename);
             writeFileSync(filePath, buffer);
 
             downloaded++;

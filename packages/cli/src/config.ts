@@ -120,14 +120,17 @@ export function getCredentials(): { username: string; password: string } | null 
   return null;
 }
 
-/** Get vault path from ~/.e3.env, fallback to default */
+/** Get vault path from ~/.e3.env */
 export function getVaultPath(): string {
   try {
     const raw = readFileSync(ENV_PATH, 'utf-8');
     const vault = raw.match(/^VAULT_PATH=(.+)$/m)?.[1]?.trim();
     if (vault) return vault;
   } catch { /* ignore */ }
-  return 'C:\\Users\\twsha\\Documents\\GitHub\\note';
+  throw new Error(
+    'Obsidian vault 路徑未設定。請在 ~/.e3.env 加入:\n' +
+    '  VAULT_PATH=C:\\path\\to\\your\\vault',
+  );
 }
 
 /**

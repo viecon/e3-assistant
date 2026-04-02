@@ -11,10 +11,42 @@ export function registerAuthCommands(program: Command): void {
     .option('--token <token>', '使用 Moodle web service token 登入')
     .option('--session <cookie>', '使用 MoodleSession cookie 登入（從瀏覽器複製）')
     .option('-u, --username <user>', 'E3 帳號（直接用帳密取得 token）')
-    .option('-p, --password <pass>', 'E3 密碼')
+    .option('-p, --password <pass>', 'E3 密碼（建議省略此選項，會互動式詢問以避免密碼出現在 shell history）')
     .action(async (opts) => {
       try {
         const baseUrl = getBaseUrl();
+
+        // If username provided without password, prompt interactively
+        if (opts.username && !opts.password) {
+          const { createInterface } = await import('node:readline');
+          const rl = createInterface({ input: process.stdin, output: process.stdout });
+          opts.password = await new Promise<string>((resolve) => {
+            process.stdout.write('E3 密碼: ');
+            rl.close();
+            // Simple hidden input
+            let input = '';
+            process.stdin.setRawMode?.(true);
+            process.stdin.resume();
+            process.stdin.setEncoding('utf-8');
+            const onData = (char: string) => {
+              if (char === '\n' || char === '\r' || char === '\u0004') {
+                process.stdin.setRawMode?.(false);
+                process.stdin.pause();
+                process.stdin.removeListener('data', onData);
+                process.stdout.write('\n');
+                resolve(input);
+              } else if (char === '\u0003') {
+                process.exit();
+              } else if (char === '\u007F' || char === '\b') {
+                if (input.length > 0) input = input.slice(0, -1);
+              } else {
+                input += char;
+                process.stdout.write('*');
+              }
+            };
+            process.stdin.on('data', onData);
+          });
+        }
 
         // Username + password login
         if (opts.username && opts.password) {

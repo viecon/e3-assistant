@@ -11,7 +11,8 @@ function getVaultFromEnv() {
     const match = raw.match(/^VAULT_PATH=(.+)$/m);
     if (match) return match[1].trim();
   } catch {}
-  return 'C:\\Users\\twsha\\Documents\\GitHub\\note';
+  console.error('Error: VAULT_PATH not set in ~/.e3.env');
+  process.exit(1);
 }
 const vault = process.argv[2] || getVaultFromEnv();
 const THRESHOLD = 300; // bytes - stubs and near-empty notes
