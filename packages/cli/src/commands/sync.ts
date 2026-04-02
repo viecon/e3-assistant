@@ -130,6 +130,8 @@ export function registerSyncCommand(program: Command): void {
           const newToken = await tryRelogin();
           if (newToken) {
             client = new MoodleClient({ token: newToken, baseUrl: getBaseUrl() });
+          } else {
+            throw new Error('Token 過期且無法自動重登（沒有儲存帳密）。請執行 e3 login');
           }
         }
 
