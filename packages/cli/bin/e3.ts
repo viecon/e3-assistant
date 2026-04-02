@@ -14,6 +14,8 @@ import { registerNewsCommand } from '../src/commands/news.js';
 import { registerSubmissionCommand } from '../src/commands/submission.js';
 import { registerUpdatesCommand } from '../src/commands/updates.js';
 import { registerNotificationsCommand } from '../src/commands/notifications.js';
+import { registerStatusCommand } from '../src/commands/status.js';
+import { registerOpenCommand } from '../src/commands/open.js';
 
 const program = new Command();
 
@@ -35,5 +37,7 @@ registerNewsCommand(program);
 registerSubmissionCommand(program);
 registerUpdatesCommand(program);
 registerNotificationsCommand(program);
+registerStatusCommand(program);
+registerOpenCommand(program);
 
 program.parse();
