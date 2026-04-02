@@ -5,6 +5,7 @@ import { MoodleClient, getEnrolledCourses, getForums, getForumDiscussions } from
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { printJson, formatDate } from '../output.js';
 import { stripHtml } from '../html.js';
+import { createClient } from '../createClient.js';
 
 
 export function registerNewsCommand(program: Command): void {
@@ -16,13 +17,7 @@ export function registerNewsCommand(program: Command): void {
     .option('--json', 'JSON 格式輸出')
     .action(async (opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
 
         const spinner = ora('取得公告...').start();
 

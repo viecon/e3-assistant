@@ -6,6 +6,7 @@ import { basename } from 'node:path';
 import { MoodleClient, uploadFiles, saveSubmission } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { formatFileSize } from '../output.js';
+import { createClient } from '../createClient.js';
 
 export function registerUploadCommand(program: Command): void {
   program
@@ -14,13 +15,7 @@ export function registerUploadCommand(program: Command): void {
     .option('--no-submit', '只上傳不提交')
     .action(async (assignmentId: string, filePaths: string[], opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
 
         // Read files
         const files = filePaths.map(fp => {

@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { getSiteInfo, MoodleClient, getEnrolledCourses } from '@e3/core';
 import { saveConfig, clearConfig, loadConfig, getBaseUrl, saveCredentials, getCredentials } from '../config.js';
+import { createClient } from '../createClient.js';
 
 export function registerAuthCommands(program: Command): void {
   program

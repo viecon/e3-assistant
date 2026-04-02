@@ -4,6 +4,7 @@ import ora from 'ora';
 import { MoodleClient, getEnrolledCourses } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { printTable, printJson } from '../output.js';
+import { createClient } from '../createClient.js';
 
 export function registerCoursesCommand(program: Command): void {
   program
@@ -13,13 +14,7 @@ export function registerCoursesCommand(program: Command): void {
     .option('--json', 'JSON 格式輸出')
     .action(async (opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
 
         const spinner = ora('取得課程列表...').start();
         const classification = opts.all ? 'all' : 'inprogress';

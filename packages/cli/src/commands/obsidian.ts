@@ -8,6 +8,7 @@ import {
   getPendingAssignmentsViaCalendar,
 } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { createClient } from '../createClient.js';
 
 interface ObsidianConfig {
   apiUrl: string;
@@ -59,13 +60,7 @@ export function registerObsidianCommand(program: Command): void {
     .action(async (courseId: string, opts) => {
       try {
         const obsConfig = getObsidianConfig();
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
         const allCourses = await getEnrolledCourses(client, 'all');
 
         let courseIds: number[];

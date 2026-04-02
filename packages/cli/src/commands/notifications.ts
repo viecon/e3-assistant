@@ -5,6 +5,7 @@ import { MoodleClient, getNotifications } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth, getUserId } from '../config.js';
 import { printJson, formatDate } from '../output.js';
 import { stripHtml } from '../html.js';
+import { createClient } from '../createClient.js';
 
 
 export function registerNotificationsCommand(program: Command): void {
@@ -15,13 +16,7 @@ export function registerNotificationsCommand(program: Command): void {
     .option('--json', 'JSON 格式輸出')
     .action(async (opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
         const userid = getUserId();
 
         const spinner = ora('取得通知...').start();

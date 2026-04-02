@@ -4,6 +4,7 @@ import ora from 'ora';
 import { MoodleClient, getUserCourses, getCourseGrades, getAllGrades } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth, getUserId } from '../config.js';
 import { printTable, printJson } from '../output.js';
+import { createClient } from '../createClient.js';
 
 export function registerGradesCommand(program: Command): void {
   program
@@ -12,13 +13,7 @@ export function registerGradesCommand(program: Command): void {
     .option('--json', 'JSON 格式輸出')
     .action(async (courseId: string | undefined, opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
         const userid = getUserId();
 
         if (courseId) {

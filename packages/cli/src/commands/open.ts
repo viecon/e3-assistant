@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { execFile } from 'node:child_process';
 import { MoodleClient, getEnrolledCourses } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { createClient } from '../createClient.js';
 
 function openUrl(url: string): void {
   // Validate URL to prevent command injection
@@ -48,13 +49,7 @@ export function registerOpenCommand(program: Command): void {
         }
 
         // Search by course name
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl,
-        });
+        const client = createClient();
 
         const courses = await getEnrolledCourses(client, 'inprogress');
         const needle = target.toLowerCase();

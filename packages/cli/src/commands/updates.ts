@@ -4,6 +4,7 @@ import ora from 'ora';
 import { MoodleClient, getEnrolledCourses, getCourseUpdates, getCourseContents } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { printJson, formatDate } from '../output.js';
+import { createClient } from '../createClient.js';
 
 export function registerUpdatesCommand(program: Command): void {
   program
@@ -13,13 +14,7 @@ export function registerUpdatesCommand(program: Command): void {
     .option('--json', 'JSON 格式輸出')
     .action(async (courseId: string | undefined, opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
 
         const spinner = ora('取得更新...').start();
         const since = Math.floor(Date.now() / 1000) - Number(opts.days) * 86400;

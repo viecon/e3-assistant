@@ -1,5 +1,6 @@
 /**
- * Strip HTML tags and decode entities.
+ * Strip HTML tags and decode entities for CLI terminal output.
+ * Uses \n for line breaks (vs extension/lib/utils.ts which uses spaces for inline UI).
  * Safe for use with untrusted content (no innerHTML).
  */
 export function stripHtml(html: string): string {

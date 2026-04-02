@@ -7,6 +7,7 @@ import { MoodleClient, listCourseFiles, getEnrolledCourses } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { formatFileSize, printJson } from '../output.js';
 import { safeJoin } from '../sanitize.js';
+import { createClient } from '../createClient.js';
 
 export function registerDownloadCommand(program: Command): void {
   program
@@ -20,13 +21,7 @@ export function registerDownloadCommand(program: Command): void {
     .option('--json', 'JSON 格式輸出')
     .action(async (courseId: string | undefined, opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
 
         if (!courseId && !opts.all) {
           console.error(chalk.red('請指定課程 ID 或使用 --all 下載全部'));

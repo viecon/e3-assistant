@@ -9,6 +9,7 @@ import {
   getPendingAssignmentsViaCalendar,
 } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth, getUserId } from '../config.js';
+import { createClient } from '../createClient.js';
 
 export function registerExportCommand(program: Command): void {
   const exportCmd = program
@@ -21,13 +22,7 @@ export function registerExportCommand(program: Command): void {
     .option('-o, --output <file>', '輸出檔案', 'grades.csv')
     .action(async (opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
         const userid = getUserId();
 
         const spinner = ora('匯出成績...').start();
@@ -74,13 +69,7 @@ export function registerExportCommand(program: Command): void {
     .option('-o, --output <file>', '輸出檔案', 'assignments.csv')
     .action(async (opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
 
         const spinner = ora('匯出作業...').start();
         const assignments = await getPendingAssignmentsViaCalendar(client, 90);

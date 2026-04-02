@@ -13,6 +13,7 @@ import type { CourseSection } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth, tryRelogin, getVaultPath } from '../config.js';
 import { safeJoin, sanitizeFilename } from '../sanitize.js';
 import { stripHtml } from '../html.js';
+import { createClient } from '../createClient.js';
 
 // Vault path from ~/.e3.env or default
 
@@ -126,13 +127,7 @@ export function registerSyncCommand(program: Command): void {
     .option('--json', 'JSON 格式輸出（列出新下載的講義，供 AI 生成筆記）')
     .action(async (opts) => {
       try {
-        requireAuth();
-        let config = loadConfig();
-        let client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        let client = createClient();
 
         // Verify token works, auto-relogin if expired
         try {
@@ -140,7 +135,6 @@ export function registerSyncCommand(program: Command): void {
         } catch {
           const newToken = await tryRelogin();
           if (newToken) {
-            config = loadConfig();
             client = new MoodleClient({ token: newToken, baseUrl: getBaseUrl() });
           }
         }

@@ -1,3 +1,6 @@
+// Constants
+export { DEFAULT_BASE_URL, SECONDS_PER_DAY, SECONDS_PER_HOUR } from './constants.js';
+
 // Core client
 export { MoodleClient, MoodleApiError } from './client.js';
 export type { MoodleClientOptions } from './client.js';

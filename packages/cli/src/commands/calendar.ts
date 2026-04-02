@@ -4,6 +4,7 @@ import ora from 'ora';
 import { MoodleClient, getUpcomingEvents } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { printTable, printJson, formatDate, urgencyColor } from '../output.js';
+import { createClient } from '../createClient.js';
 
 export function registerCalendarCommand(program: Command): void {
   program
@@ -13,13 +14,7 @@ export function registerCalendarCommand(program: Command): void {
     .option('--json', 'JSON 格式輸出')
     .action(async (opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
 
         const spinner = ora('取得行事曆...').start();
         const result = await getUpcomingEvents(client, Number(opts.days));

@@ -4,6 +4,7 @@ import ora from 'ora';
 import { MoodleClient, getPendingAssignmentsViaCalendar } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { printTable, printJson, formatDate, urgencyColor } from '../output.js';
+import { createClient } from '../createClient.js';
 
 export function registerAssignmentsCommand(program: Command): void {
   program
@@ -13,13 +14,7 @@ export function registerAssignmentsCommand(program: Command): void {
     .option('--json', 'JSON 格式輸出')
     .action(async (opts) => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
 
         const spinner = ora('取得作業列表...').start();
         const pending = await getPendingAssignmentsViaCalendar(client, Number(opts.days));

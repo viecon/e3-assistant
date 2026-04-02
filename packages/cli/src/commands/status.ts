@@ -9,6 +9,7 @@ import {
 } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth, getUserId } from '../config.js';
 import { formatDate, urgencyColor } from '../output.js';
+import { createClient } from '../createClient.js';
 
 export function registerStatusCommand(program: Command): void {
   program
@@ -16,13 +17,7 @@ export function registerStatusCommand(program: Command): void {
     .description('E3 總覽：未繳作業 + 未讀通知 + 課程數')
     .action(async () => {
       try {
-        requireAuth();
-        const config = loadConfig();
-        const client = new MoodleClient({
-          token: config.token,
-          sessionCookie: config.session,
-          baseUrl: getBaseUrl(),
-        });
+        const client = createClient();
 
         const spinner = ora('取得總覽...').start();
 
