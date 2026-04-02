@@ -36,5 +36,8 @@ export { getUpcomingEvents } from './calendar.js';
 // Grades
 export { getCourseGrades, getAllGrades } from './grades.js';
 
+// Utils
+export { flattenParams } from './utils.js';
+
 // Types
 export type * from './types.js';
