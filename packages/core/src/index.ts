@@ -6,7 +6,13 @@ export type { MoodleClientOptions } from './client.js';
 export { getSiteInfo } from './auth.js';
 
 // Courses
-export { getUserCourses, getEnrolledCourses, getCourseContents, getCourseState } from './courses.js';
+export { getUserCourses, getEnrolledCourses, getCourseContents, getCourseState, getCourseUpdates } from './courses.js';
+
+// Forums
+export { getForums, getForumDiscussions } from './forums.js';
+
+// Notifications
+export { getNotifications } from './notifications.js';
 
 // Assignments
 export {

@@ -1,4 +1,4 @@
-import type { Course, CourseSection } from './types.js';
+import type { Course, CourseSection, CourseUpdateInstance } from './types.js';
 import { MoodleClient } from './client.js';
 
 /**
@@ -54,6 +54,20 @@ export async function getCourseContents(
  * Get course state via AJAX-compatible API.
  * Returns a JSON string with course structure.
  */
+/**
+ * Get recent updates for a course since a timestamp.
+ */
+export async function getCourseUpdates(
+  client: MoodleClient,
+  courseid: number,
+  since: number,
+): Promise<{ instances: CourseUpdateInstance[] }> {
+  return client.call<{ instances: CourseUpdateInstance[] }>('core_course_get_updates_since', {
+    courseid,
+    since,
+  });
+}
+
 export async function getCourseState(
   client: MoodleClient,
   courseid: number,

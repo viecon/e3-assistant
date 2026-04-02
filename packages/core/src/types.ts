@@ -316,3 +316,69 @@ export interface PendingAssignment {
   submissionStatus: 'new' | 'draft' | 'submitted' | 'unknown';
   isOverdue: boolean;
 }
+
+// ===== Forums =====
+
+export interface Forum {
+  id: number;
+  course: number;
+  type: string; // 'news' | 'general' | 'qanda' | etc.
+  name: string;
+  intro: string;
+  introformat: number;
+}
+
+export interface ForumDiscussion {
+  id: number;
+  name: string;
+  groupid: number;
+  timemodified: number;
+  usermodified: number;
+  timestart: number;
+  timeend: number;
+  discussion: number;
+  parent: number;
+  userid: number;
+  created: number;
+  modified: number;
+  mailed: number;
+  subject: string;
+  message: string;
+  messageformat: number;
+  messagetrust: number;
+  attachment: boolean;
+  totalscore: number;
+  userfullname: string;
+  userpictureurl: string;
+  numreplies: number;
+  pinned: boolean;
+}
+
+// ===== Notifications =====
+
+export interface MoodleMessage {
+  id: number;
+  useridfrom: number;
+  useridto: number;
+  subject: string;
+  text: string;
+  fullmessage: string;
+  fullmessageformat: number;
+  fullmessagehtml: string;
+  smallmessage: string;
+  notification: number;
+  contexturl: string;
+  contexturlname: string;
+  timecreated: number;
+  timeread: number;
+  usertofullname: string;
+  userfromfullname: string;
+}
+
+// ===== Course Updates =====
+
+export interface CourseUpdateInstance {
+  contextlevel: string;
+  id: number;
+  updates: { name: string; timeupdated?: number; itemids?: number[] }[];
+}

@@ -10,6 +10,10 @@ import { registerGradesCommand } from '../src/commands/grades.js';
 import { registerCalendarCommand } from '../src/commands/calendar.js';
 import { registerObsidianCommand } from '../src/commands/obsidian.js';
 import { registerSyncCommand } from '../src/commands/sync.js';
+import { registerNewsCommand } from '../src/commands/news.js';
+import { registerSubmissionCommand } from '../src/commands/submission.js';
+import { registerUpdatesCommand } from '../src/commands/updates.js';
+import { registerNotificationsCommand } from '../src/commands/notifications.js';
 
 const program = new Command();
 
@@ -27,5 +31,9 @@ registerGradesCommand(program);
 registerCalendarCommand(program);
 registerObsidianCommand(program);
 registerSyncCommand(program);
+registerNewsCommand(program);
+registerSubmissionCommand(program);
+registerUpdatesCommand(program);
+registerNotificationsCommand(program);
 
 program.parse();
