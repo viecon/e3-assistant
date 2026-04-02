@@ -132,7 +132,7 @@ export function registerSyncCommand(program: Command): void {
   program
     .command('sync')
     .description('自動同步 E3 講義和作業到 Obsidian')
-    .option('--vault <path>', 'Obsidian vault 路徑', getVaultPath())
+    .option('--vault <path>', 'Obsidian vault 路徑')
     .option('--dry-run', '只顯示會做什麼，不實際寫入')
     .option('--json', 'JSON 格式輸出（列出新下載的講義，供 AI 生成筆記）')
     .action(async (opts) => {
@@ -156,7 +156,7 @@ export function registerSyncCommand(program: Command): void {
           }
         }
 
-        const vault = opts.vault;
+        const vault = opts.vault || getVaultPath();
         const dryRun = opts.dryRun ?? false;
         const jsonOutput = opts.json ?? false;
 
