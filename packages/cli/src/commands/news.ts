@@ -4,20 +4,8 @@ import ora from 'ora';
 import { MoodleClient, getEnrolledCourses, getForums, getForumDiscussions } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { printJson, formatDate } from '../output.js';
+import { stripHtml } from '../html.js';
 
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/p>/gi, '\n')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
 
 export function registerNewsCommand(program: Command): void {
   program

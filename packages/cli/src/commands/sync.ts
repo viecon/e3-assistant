@@ -12,6 +12,7 @@ import {
 import type { CourseSection } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth, tryRelogin, getVaultPath } from '../config.js';
 import { safeJoin, sanitizeFilename } from '../sanitize.js';
+import { stripHtml } from '../html.js';
 
 // Vault path from ~/.e3.env or default
 
@@ -108,18 +109,6 @@ function formatDateTime(ts: number): string {
   });
 }
 
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/p>/gi, '\n')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .trim();
-}
 
 interface ChapterGroup {
   key: string;            // e.g. "L1 Storage Devices"

@@ -4,17 +4,8 @@ import ora from 'ora';
 import { MoodleClient, getSubmissionStatus } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
 import { printJson, formatDate } from '../output.js';
+import { stripHtml } from '../html.js';
 
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/p>/gi, '\n')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
 
 export function registerSubmissionCommand(program: Command): void {
   program
