@@ -6,9 +6,9 @@ Read the `stubs.json` file in the same directory as this prompt for a list of no
 
 For EACH item in the array:
 
-1. **Read the EXISTING note** at `notePath` first. It may be:
-   - A bare stub (just title + slides link, under ~300 bytes) → generate full note
-   - A note with partial content the student wrote → KEEP everything the student wrote, only ADD to empty sections or append missing topics
+1. **Read the EXISTING note** at `notePath` first. Check the `reason` field:
+   - `reason: "stub"` → bare stub (under ~300 bytes), generate full note from scratch
+   - `reason: "outdated"` → note exists but slides were updated since. Read the existing note carefully, KEEP the student's writing, and ADD/UPDATE sections with new content from the updated slides. Do NOT regenerate from scratch — merge new information in.
 
 2. **Extract slide content** using the Python tool. For each file in `pdfFiles`, run:
    ```bash
