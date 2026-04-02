@@ -13,3 +13,8 @@ packages/extension/.claude/
 .claude/settings.local.json
 _pdf_text/
 .claude/ralph-loop.local.md
+.DS_Store
+.idea/
+*.swp
+*.swo
+*.env.local

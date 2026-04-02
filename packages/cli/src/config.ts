@@ -22,6 +22,7 @@ interface E3Config {
 }
 
 const CONFIG_PATH = join(homedir(), '.e3rc.json');
+const ENV_PATH = join(homedir(), '.e3.env');
 
 export function loadConfig(): E3Config {
   try {
@@ -66,8 +67,6 @@ export function requireAuth(): void {
     );
   }
 }
-
-const ENV_PATH = join(homedir(), '.e3.env');
 
 /** Save credentials to ~/.e3.env (separate from config, gitignored) */
 export function saveCredentials(username: string, password: string): void {
