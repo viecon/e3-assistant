@@ -1,0 +1,54 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build core
+        run: pnpm --filter @e3/core build
+
+      - name: Build CLI
+        run: pnpm --filter @e3/cli build
+
+      - name: Build extension (Chrome)
+        run: cd packages/extension && npx wxt build
+
+      - name: Build extension (Firefox)
+        run: cd packages/extension && npx wxt build --browser firefox
+
+      - name: Test CLI help
+        run: node packages/cli/dist/bin/e3.js --help
+
+      - name: Upload Chrome extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension
+          path: packages/extension/.output/chrome-mv3/
+
+      - name: Upload Firefox extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-extension
+          path: packages/extension/.output/firefox-mv2/

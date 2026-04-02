@@ -12,3 +12,4 @@ packages/extension/bash.exe.stackdump
 packages/extension/.claude/
 .claude/settings.local.json
 _pdf_text/
+.claude/ralph-loop.local.md
