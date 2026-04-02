@@ -5,8 +5,8 @@ import { basename, join, resolve } from 'node:path';
  * Strips directory components, removes dangerous characters.
  */
 export function sanitizeFilename(filename: string): string {
-  // Extract just the filename (strip any path components like ../ or /)
-  let safe = basename(filename);
+  // Normalize path separators then extract just the filename
+  let safe = basename(filename.replace(/\\/g, '/'));
 
   // Remove null bytes
   safe = safe.replace(/\0/g, '');
