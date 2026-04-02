@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { MoodleClient, listCourseFiles, getEnrolledCourses } from '@e3/core';
 import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
@@ -10,13 +10,15 @@ import { safeJoin } from '../sanitize.js';
 
 export function registerDownloadCommand(program: Command): void {
   program
-    .command('download <course-id>')
+    .command('download [course-id]')
     .description('下載課程教材')
+    .option('--all', '下載所有課程的教材')
     .option('--type <types>', '檔案類型篩選，逗號分隔 (例: pdf,pptx,docx)')
     .option('-o, --output <dir>', '輸出目錄', '.')
     .option('--list', '只列出檔案，不下載')
+    .option('--skip-existing', '跳過已存在的檔案')
     .option('--json', 'JSON 格式輸出')
-    .action(async (courseId: string, opts) => {
+    .action(async (courseId: string | undefined, opts) => {
       try {
         requireAuth();
         const config = loadConfig();
@@ -26,61 +28,90 @@ export function registerDownloadCommand(program: Command): void {
           baseUrl: getBaseUrl(),
         });
 
+        if (!courseId && !opts.all) {
+          console.error(chalk.red('請指定課程 ID 或使用 --all 下載全部'));
+          process.exit(1);
+        }
+
         const typeFilter = opts.type?.split(',').map((t: string) => t.trim().toLowerCase());
 
-        const spinner = ora('取得課程教材列表...').start();
-        const files = await listCourseFiles(client, Number(courseId), typeFilter);
-        spinner.stop();
+        // Get course list
+        const courses = await getEnrolledCourses(client, 'inprogress');
+        const targetCourses = opts.all
+          ? courses
+          : courses.filter(c => c.id === Number(courseId));
 
-        if (files.length === 0) {
-          console.log(chalk.yellow('沒有找到符合條件的檔案'));
-          return;
+        if (targetCourses.length === 0 && courseId) {
+          targetCourses.push({ id: Number(courseId), shortname: `course_${courseId}`, fullname: `Course ${courseId}`, viewurl: '', visible: true });
         }
 
-        if (opts.json) {
-          printJson(files);
-          return;
-        }
+        let totalDownloaded = 0;
+        let totalSkipped = 0;
+        let totalFailed = 0;
 
-        if (opts.list) {
-          console.log(chalk.bold(`共 ${files.length} 個檔案:\n`));
-          for (const f of files) {
-            console.log(`  ${chalk.cyan(f.filename)} ${chalk.gray(formatFileSize(f.filesize))} - ${f.moduleName}`);
-          }
-          return;
-        }
+        for (const course of targetCourses) {
+          const folderName = course.shortname.replace(/[<>:"/\\|?*]/g, '_');
+          const outputDir = join(opts.output, folderName);
 
-        // Get course name for folder
-        const courses = await getEnrolledCourses(client, 'all');
-        const course = courses.find(c => c.id === Number(courseId));
-        const folderName = course
-          ? course.shortname.replace(/[<>:"/\\|?*]/g, '_')
-          : `course_${courseId}`;
-
-        const outputDir = join(opts.output, folderName);
-        mkdirSync(outputDir, { recursive: true });
-
-        console.log(chalk.bold(`下載 ${files.length} 個檔案到 ${outputDir}/\n`));
-
-        let downloaded = 0;
-        let failed = 0;
-
-        for (const file of files) {
-          const dlSpinner = ora(`[${downloaded + failed + 1}/${files.length}] ${file.filename}`).start();
+          const spinner = ora(`[${course.shortname}] 取得教材列表...`).start();
+          let files;
           try {
-            const buffer = await client.downloadFile(file.fileurl);
-            const filePath = safeJoin(outputDir, file.filename);
-            writeFileSync(filePath, buffer);
+            files = await listCourseFiles(client, course.id, typeFilter);
+          } catch {
+            spinner.fail(`[${course.shortname}] 無法取得教材`);
+            continue;
+          }
 
-            downloaded++;
-            dlSpinner.succeed(`${file.filename} ${chalk.gray(formatFileSize(file.filesize))}`);
-          } catch (err: unknown) {
-            failed++;
-            dlSpinner.fail(`${file.filename} - ${chalk.red(err instanceof Error ? err.message : 'failed')}`);
+          if (files.length === 0) {
+            spinner.info(`[${course.shortname}] 沒有教材`);
+            continue;
+          }
+
+          if (opts.list) {
+            spinner.stop();
+            console.log(chalk.bold(`\n[${course.shortname}] ${files.length} 個檔案:`));
+            for (const f of files) {
+              console.log(`  ${chalk.cyan(f.filename)} ${chalk.gray(formatFileSize(f.filesize))}`);
+            }
+            continue;
+          }
+
+          if (opts.json) {
+            spinner.stop();
+            printJson(files.map(f => ({ ...f, course: course.shortname })));
+            continue;
+          }
+
+          mkdirSync(outputDir, { recursive: true });
+          spinner.succeed(`[${course.shortname}] ${files.length} 個檔案`);
+
+          for (const file of files) {
+            const filePath = safeJoin(outputDir, file.filename);
+
+            if (opts.skipExisting && existsSync(filePath)) {
+              totalSkipped++;
+              continue;
+            }
+
+            const dlSpinner = ora(`  ${file.filename}`).start();
+            try {
+              const buffer = await client.downloadFile(file.fileurl);
+              writeFileSync(filePath, buffer);
+              totalDownloaded++;
+              dlSpinner.succeed(`  ${file.filename} ${chalk.gray(formatFileSize(file.filesize))}`);
+            } catch (err: unknown) {
+              totalFailed++;
+              dlSpinner.fail(`  ${file.filename} ${chalk.red(err instanceof Error ? err.message : 'failed')}`);
+            }
           }
         }
 
-        console.log(`\n${chalk.green(`✓ 完成: ${downloaded} 個下載成功`)}${failed > 0 ? chalk.red(`, ${failed} 個失敗`) : ''}`);
+        if (!opts.list && !opts.json) {
+          const parts = [chalk.green(`${totalDownloaded} 下載成功`)];
+          if (totalSkipped > 0) parts.push(`${totalSkipped} 已存在`);
+          if (totalFailed > 0) parts.push(chalk.red(`${totalFailed} 失敗`));
+          console.log(`\n${parts.join(', ')}`);
+        }
       } catch (err: unknown) {
         console.error(chalk.red(`錯誤: ${err instanceof Error ? err.message : err}`));
         process.exit(1);
