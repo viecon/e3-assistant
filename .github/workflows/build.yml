@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Lint
+        run: npx eslint packages/core/src/ packages/cli/src/ packages/cli/bin/ --ext .ts
+
       - name: Run tests
         run: pnpm test
 
