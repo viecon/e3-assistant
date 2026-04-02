@@ -68,9 +68,3 @@ export async function getCourseUpdates(
   });
 }
 
-export async function getCourseState(
-  client: MoodleClient,
-  courseid: number,
-): Promise<string> {
-  return client.call<string>('core_courseformat_get_state', { courseid });
-}

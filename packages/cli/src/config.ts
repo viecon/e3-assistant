@@ -37,31 +37,6 @@ export function clearConfig(): void {
   try { unlinkSync(ENV_PATH); } catch { /* ignore if doesn't exist */ }
 }
 
-export function getAuthHeaders(): Record<string, string> {
-  const config = loadConfig();
-
-  if (config.authMode === 'session' && config.session) {
-    return { Cookie: `MoodleSession=${config.session}` };
-  }
-
-  return {};
-}
-
-export function getToken(): string | null {
-  const config = loadConfig();
-  return config.token ?? null;
-}
-
-export function getSession(): string | null {
-  const config = loadConfig();
-  return config.session ?? null;
-}
-
-export function getSesskey(): string | null {
-  const config = loadConfig();
-  return config.sesskey ?? null;
-}
-
 export function getUserId(): number {
   const config = loadConfig();
   if (!config.userid) {

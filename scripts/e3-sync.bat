@@ -2,7 +2,7 @@
 REM E3 自動同步 + AI 生成筆記 Workflow
 
 setlocal
-set "PROJECT=C:\Users\twsha\Desktop\E3 plugin"
+set "PROJECT=%~dp0.."
 set "LOG=%PROJECT%\scripts\sync.log"
 set "STUBS=%PROJECT%\scripts\stubs.json"
 set "PROMPT=%PROJECT%\scripts\generate-notes-prompt.md"

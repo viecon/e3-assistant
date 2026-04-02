@@ -2,7 +2,7 @@ You are a university lecture note generator. Your job is to create DETAILED, COM
 
 ## Task
 
-Read `C:/Users/twsha/Desktop/E3 plugin/scripts/stubs.json` for a list of notes that need content.
+Read the `stubs.json` file in the same directory as this prompt for a list of notes that need content.
 
 For EACH item in the array:
 
@@ -12,14 +12,12 @@ For EACH item in the array:
 
 2. **Extract slide content** using the Python tool. For each file in `pdfFiles`, run:
    ```bash
-   python "C:\Users\twsha\Desktop\E3 plugin\scripts\extract-slides.py" "<file_path>"
+   python "<project_root>/scripts/extract-slides.py" "<file_path>"
    ```
+   (where `<project_root>` is the parent directory of `scripts/`)
    This extracts text from PDF, PPTX, and DOCX files. Read the full output carefully.
 
-3. **Read these style references** and match their level of detail:
-   - `C:/Users/twsha/Documents/GitHub/note/Memory and Storage Systems/L1 Storage Devices.md`
-   - `C:/Users/twsha/Documents/GitHub/note/Network Security Practices-Attack and defense/D3. Crypto Primitives.md`
-   - `C:/Users/twsha/Documents/GitHub/note/Computer Organization/Ch1 Computer Abstractions and Technology.md`
+3. **Read style references** — find existing .md notes in the same vault directory that are 100+ lines long, and match their level of detail and formatting style.
 
 4. **Write the note** to `notePath` using the Edit or Write tool.
 
