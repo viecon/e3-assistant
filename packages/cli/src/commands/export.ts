@@ -2,13 +2,10 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 import { writeFileSync } from 'node:fs';
-import {
-  MoodleClient,
-  getEnrolledCourses,
+import { getEnrolledCourses,
   getCourseGrades,
-  getPendingAssignmentsViaCalendar,
-} from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth, getUserId } from '../config.js';
+  getPendingAssignmentsViaCalendar } from '@e3/core';
+import { getUserId } from '../config.js';
 import { createClient } from '../createClient.js';
 
 export function registerExportCommand(program: Command): void {

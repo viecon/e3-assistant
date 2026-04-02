@@ -1,8 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { MoodleClient, getEnrolledCourses, getForums, getForumDiscussions } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { getEnrolledCourses, getForums, getForumDiscussions } from '@e3/core';
 import { printJson, formatDate } from '../output.js';
 import { stripHtml } from '../html.js';
 import { createClient } from '../createClient.js';
@@ -48,8 +47,7 @@ export function registerNewsCommand(program: Command): void {
               subject: d.subject || d.name,
               message: stripHtml(d.message),
               time: d.timemodified,
-              author: d.userfullname,
-            });
+              author: d.userfullname });
           }
         }
 

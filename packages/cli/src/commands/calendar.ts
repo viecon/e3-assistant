@@ -1,8 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { MoodleClient, getUpcomingEvents } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { getUpcomingEvents } from '@e3/core';
 import { printTable, printJson, formatDate, urgencyColor } from '../output.js';
 import { createClient } from '../createClient.js';
 
@@ -30,8 +29,7 @@ export function registerCalendarCommand(program: Command): void {
             timestart: e.timestart,
             eventtype: e.eventtype,
             overdue: e.overdue,
-            url: e.url,
-          })));
+            url: e.url })));
           return;
         }
 

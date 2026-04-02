@@ -3,8 +3,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { readFileSync } from 'node:fs';
 import { basename } from 'node:path';
-import { MoodleClient, uploadFiles, saveSubmission } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { uploadFiles, saveSubmission } from '@e3/core';
 import { formatFileSize } from '../output.js';
 import { createClient } from '../createClient.js';
 

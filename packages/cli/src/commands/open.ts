@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { execFile } from 'node:child_process';
-import { MoodleClient, getEnrolledCourses } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { getEnrolledCourses } from '@e3/core';
+import { getBaseUrl } from '../config.js';
 import { createClient } from '../createClient.js';
 
 function openUrl(url: string): void {

@@ -7,10 +7,9 @@ import {
   MoodleClient,
   getEnrolledCourses,
   getCourseContents,
-  getPendingAssignmentsViaCalendar,
-} from '@e3/core';
+  getPendingAssignmentsViaCalendar } from '@e3/core';
 import type { CourseSection } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth, tryRelogin, getVaultPath, getExcludedCourses, getExcludedExtensions } from '../config.js';
+import { getBaseUrl, tryRelogin, getVaultPath, getExcludedCourses, getExcludedExtensions } from '../config.js';
 import { safeJoin, sanitizeFilename } from '../sanitize.js';
 import { stripHtml } from '../html.js';
 import { createClient } from '../createClient.js';
@@ -104,12 +103,6 @@ function formatDateISO(ts: number): string {
   return new Date(ts * 1000).toISOString().slice(0, 10);
 }
 
-function formatDateTime(ts: number): string {
-  return new Date(ts * 1000).toLocaleString('zh-TW', {
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit',
-  });
-}
 
 
 interface ChapterGroup {
@@ -183,7 +176,7 @@ export function registerSyncCommand(program: Command): void {
 
           // Collect all slide files for this course
           const allSlideFiles: string[] = [];
-          let hasNewSlides = false;
+          
 
           for (const section of sections) {
             for (const mod of section.modules) {
@@ -202,7 +195,7 @@ export function registerSyncCommand(program: Command): void {
                 }
 
                 // New slide - download
-                hasNewSlides = true;
+                
                 if (dryRun) {
                   console.log(`  📄 ${chalk.green('NEW')} ${folderName}/slides/${content.filename}`);
                 } else {
@@ -285,8 +278,7 @@ export function registerSyncCommand(program: Command): void {
               chapter: chapter.key,
               slideFiles: chapter.slides,
               notePath: notePath,
-              slidesDir,
-            });
+              slidesDir });
 
             // Create stub note (matches existing note format: no frontmatter, # title, > course info)
             mkdirSync(courseDir, { recursive: true });
@@ -395,11 +387,9 @@ export function registerSyncCommand(program: Command): void {
               course: s.course,
               chapter: s.chapter,
               notePath: s.notePath,
-              pdfFiles: s.slideFiles.filter(f => f.endsWith('.pdf')).map(f => join(s.slidesDir, f)),
-            })),
+              pdfFiles: s.slideFiles.filter(f => f.endsWith('.pdf')).map(f => join(s.slidesDir, f)) })),
             newAssignments: assignCreated,
-            summary: { newSlides, newNotes, skippedSlides, assignCreated, assignSkipped },
-          }, null, 2));
+            summary: { newSlides, newNotes, skippedSlides, assignCreated, assignSkipped } }, null, 2));
         } else {
           console.log(chalk.bold(`\n✅ 同步完成！`));
         }

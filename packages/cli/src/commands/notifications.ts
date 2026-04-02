@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { MoodleClient, getNotifications } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth, getUserId } from '../config.js';
+import { getNotifications } from '@e3/core';
+import { getUserId } from '../config.js';
 import { printJson, formatDate } from '../output.js';
 import { stripHtml } from '../html.js';
 import { createClient } from '../createClient.js';
@@ -33,8 +33,7 @@ export function registerNotificationsCommand(program: Command): void {
             from: m.userfromfullname,
             time: m.timecreated,
             read: m.timeread > 0,
-            url: m.contexturl,
-          })));
+            url: m.contexturl })));
           return;
         }
 

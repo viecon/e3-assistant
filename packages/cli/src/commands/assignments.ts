@@ -1,8 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { MoodleClient, getPendingAssignmentsViaCalendar } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { getPendingAssignmentsViaCalendar } from '@e3/core';
 import { printTable, printJson, formatDate, urgencyColor } from '../output.js';
 import { createClient } from '../createClient.js';
 

@@ -1,8 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { MoodleClient, getSubmissionStatus } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { getSubmissionStatus } from '@e3/core';
 import { printJson, formatDate } from '../output.js';
 import { stripHtml } from '../html.js';
 import { createClient } from '../createClient.js';
@@ -35,8 +34,7 @@ export function registerSubmissionCommand(program: Command): void {
           const statusMap: Record<string, string> = {
             new: chalk.yellow('未提交'),
             draft: chalk.yellow('草稿'),
-            submitted: chalk.green('已提交'),
-          };
+            submitted: chalk.green('已提交') };
           console.log(`  狀態: ${statusMap[sub.status] ?? sub.status}`);
           if (sub.timemodified) {
             console.log(`  時間: ${formatDate(sub.timemodified)}`);

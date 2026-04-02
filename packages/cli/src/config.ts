@@ -72,7 +72,7 @@ const ENV_PATH = join(homedir(), '.e3.env');
 /** Save credentials to ~/.e3.env (separate from config, gitignored) */
 export function saveCredentials(username: string, password: string): void {
   // Preserve existing env vars (like VAULT_PATH)
-  let existing: Record<string, string> = {};
+  const existing: Record<string, string> = {};
   try {
     const raw = readFileSync(ENV_PATH, 'utf-8');
     for (const line of raw.split('\n')) {
@@ -146,8 +146,7 @@ export async function tryRelogin(): Promise<string | null> {
     const body = new URLSearchParams({
       username: creds.username,
       password: creds.password,
-      service: 'moodle_mobile_app',
-    });
+      service: 'moodle_mobile_app' });
     const res = await fetch(url.toString(), { method: 'POST', body });
     const data = await res.json() as { token?: string; error?: string };
     if (data.token) {

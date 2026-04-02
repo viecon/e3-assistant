@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { MoodleClient, getUserCourses, getCourseGrades, getAllGrades } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth, getUserId } from '../config.js';
+import { getUserCourses, getCourseGrades, getAllGrades } from '@e3/core';
+import { getUserId } from '../config.js';
 import { printTable, printJson } from '../output.js';
 import { createClient } from '../createClient.js';
 

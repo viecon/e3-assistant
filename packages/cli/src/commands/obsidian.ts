@@ -1,13 +1,9 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import {
-  MoodleClient,
-  getEnrolledCourses,
+import { getEnrolledCourses,
   getCourseContents,
-  getPendingAssignmentsViaCalendar,
-} from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+  getPendingAssignmentsViaCalendar } from '@e3/core';
 import { createClient } from '../createClient.js';
 
 interface ObsidianConfig {
@@ -34,10 +30,8 @@ async function obsidianPut(config: ObsidianConfig, path: string, content: string
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${config.apiKey}`,
-      'Content-Type': 'text/markdown',
-    },
-    body: content,
-  });
+      'Content-Type': 'text/markdown' },
+    body: content });
   if (!res.ok) {
     throw new Error(`Obsidian API error: ${res.status} ${res.statusText}`);
   }

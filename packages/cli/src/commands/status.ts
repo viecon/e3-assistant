@@ -1,13 +1,10 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import {
-  MoodleClient,
-  getEnrolledCourses,
+import { getEnrolledCourses,
   getPendingAssignmentsViaCalendar,
-  getNotifications,
-} from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth, getUserId } from '../config.js';
+  getNotifications } from '@e3/core';
+import { getUserId } from '../config.js';
 import { formatDate, urgencyColor } from '../output.js';
 import { createClient } from '../createClient.js';
 

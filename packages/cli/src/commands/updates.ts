@@ -1,8 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { MoodleClient, getEnrolledCourses, getCourseUpdates, getCourseContents } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { getEnrolledCourses, getCourseUpdates, getCourseContents } from '@e3/core';
 import { printJson, formatDate } from '../output.js';
 import { createClient } from '../createClient.js';
 
@@ -56,8 +55,7 @@ export function registerUpdatesCommand(program: Command): void {
                 updates.push({
                   module: moduleName,
                   type: update.name,
-                  time: update.timeupdated ?? null,
-                });
+                  time: update.timeupdated ?? null });
               }
             }
 

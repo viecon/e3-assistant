@@ -2,8 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 import { getSiteInfo, MoodleClient, getEnrolledCourses } from '@e3/core';
-import { saveConfig, clearConfig, loadConfig, getBaseUrl, saveCredentials, getCredentials } from '../config.js';
-import { createClient } from '../createClient.js';
+import { saveConfig, clearConfig, loadConfig, getBaseUrl, saveCredentials } from '../config.js';
 
 export function registerAuthCommands(program: Command): void {
   program
@@ -56,8 +55,7 @@ export function registerAuthCommands(program: Command): void {
           const body = new URLSearchParams({
             username: opts.username,
             password: opts.password,
-            service: 'moodle_mobile_app',
-          });
+            service: 'moodle_mobile_app' });
           const res = await fetch(loginUrl.toString(), { method: 'POST', body });
           const data = await res.json() as { token?: string; error?: string };
 
@@ -76,8 +74,7 @@ export function registerAuthCommands(program: Command): void {
             authMode: 'token',
             userid: info.userid,
             fullname: info.fullname,
-            baseUrl,
-          });
+            baseUrl });
           saveCredentials(opts.username, opts.password);
 
           console.log(chalk.gray('Token 已儲存至 ~/.e3rc.json'));
@@ -116,8 +113,7 @@ export function registerAuthCommands(program: Command): void {
 
           const client = new MoodleClient({
             sessionCookie: opts.session,
-            baseUrl,
-          });
+            baseUrl });
 
           // core_webservice_get_site_info 在 E3 AJAX API 被停用
           // 改用 fetchSesskey 驗證 session 有效性，並從頁面抓使用者資訊
@@ -133,8 +129,7 @@ export function registerAuthCommands(program: Command): void {
             // Fallback: fetch E3 main page to extract user info
             const pageRes = await fetch(`${baseUrl}/my/`, {
               headers: { Cookie: `MoodleSession=${opts.session}` },
-              redirect: 'manual',
-            });
+              redirect: 'manual' });
 
             if (pageRes.status !== 200) {
               spinner.fail('Session 無效或已過期');
@@ -169,8 +164,7 @@ export function registerAuthCommands(program: Command): void {
             authMode: 'session',
             userid,
             fullname,
-            baseUrl,
-          });
+            baseUrl });
 
           console.log(chalk.gray('Session 已儲存至 ~/.e3rc.json'));
           console.log(chalk.yellow('⚠️  Session 會過期，過期後需要重新執行 e3 login'));
@@ -181,8 +175,7 @@ export function registerAuthCommands(program: Command): void {
 
           const client = new MoodleClient({
             token: opts.token,
-            baseUrl,
-          });
+            baseUrl });
 
           const info = await getSiteInfo(client);
           spinner.succeed(`登入成功！歡迎 ${chalk.bold(info.fullname)}`);
@@ -192,8 +185,7 @@ export function registerAuthCommands(program: Command): void {
             authMode: 'token',
             userid: info.userid,
             fullname: info.fullname,
-            baseUrl,
-          });
+            baseUrl });
 
           console.log(chalk.gray('Token 已儲存至 ~/.e3rc.json'));
         }
@@ -233,8 +225,7 @@ export function registerAuthCommands(program: Command): void {
           const client = new MoodleClient({
             token: config.token,
             sessionCookie: config.session,
-            baseUrl: getBaseUrl(),
-          });
+            baseUrl: getBaseUrl() });
           try {
             await getEnrolledCourses(client, 'inprogress');
             console.log(`狀態: ${chalk.green('有效')}`);

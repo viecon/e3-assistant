@@ -1,8 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import { MoodleClient, getEnrolledCourses } from '@e3/core';
-import { loadConfig, getBaseUrl, requireAuth } from '../config.js';
+import { getEnrolledCourses } from '@e3/core';
 import { printTable, printJson } from '../output.js';
 import { createClient } from '../createClient.js';
 
@@ -25,8 +24,7 @@ export function registerCoursesCommand(program: Command): void {
           printJson(courses.map(c => ({
             id: c.id,
             shortname: c.shortname,
-            fullname: c.fullname,
-          })));
+            fullname: c.fullname })));
           return;
         }
 
