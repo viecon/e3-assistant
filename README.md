@@ -34,6 +34,8 @@ e3 upload <assignment-id> file1 file2  # 上傳並提交
 # 資訊
 e3 grades [course-id]        # 成績查詢
 e3 calendar --days 14        # 行事曆事件
+e3 calendar --ics            # 輸出 .ics 檔（作業 + 考試，可訂閱）
+e3 calendar --ics cal.ics --ics-days 120  # 自訂檔名和天數
 e3 news                      # 課程公告
 e3 updates                   # 課程最近更新
 e3 notifications             # 系統通知
@@ -82,6 +84,27 @@ scripts/e3-sync.bat          # 完整 workflow（下載 + AI 生成筆記）
 
 設定檔：`~/.e3.env`（帳密）、`~/.e3rc.json`（token + vault 路徑 + 排除設定）
 用 `e3 config` 管理設定。
+
+## iCal 行事曆訂閱
+
+作業截止日 + 考試自動同步到 iOS 行事曆 / Google Calendar / Timetree。
+
+```bash
+e3 calendar --ics            # 產生 e3-calendar.ics
+```
+
+**自動更新**：GitHub Actions 每 6 小時跑一次，部署到 GitHub Pages。
+訂閱 URL：`https://viecon.github.io/e3-assistant/e3-calendar.ics`
+
+**iOS 訂閱**：設定 → 行事曆 → 帳號 → 加入帳號 → 其他 → 加入已訂閱的行事曆 → 貼 URL
+
+**手動加考試**：編輯 `exams.json`（或 `~/.e3-exams.json`）：
+```json
+[
+  { "name": "期中考", "course": "計算機組織", "date": "2026-04-16", "startTime": "13:20", "endTime": "15:10" },
+  { "name": "期中考", "course": "日文（二）", "date": "2026-04-14", "allDay": true }
+]
+```
 
 ## Claude Code Skills
 
