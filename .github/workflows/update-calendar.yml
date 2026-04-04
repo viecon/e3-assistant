@@ -2,13 +2,11 @@ name: Update E3 Calendar
 
 on:
   schedule:
-    # Every 6 hours
     - cron: '0 */6 * * *'
-  workflow_dispatch: # Manual trigger
+  workflow_dispatch:
 
 permissions:
   contents: write
-  pages: write
 
 jobs:
   update:
@@ -27,28 +25,39 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @e3/core build && pnpm --filter @e3/cli build
 
-      - name: Generate ICS
+      - name: Authenticate & Generate ICS
         env:
-          E3_TOKEN: ${{ secrets.E3_TOKEN }}
+          E3_USERNAME: ${{ secrets.E3_USERNAME }}
+          E3_PASSWORD: ${{ secrets.E3_PASSWORD }}
           E3_BASE_URL: https://e3p.nycu.edu.tw
         run: |
-          # Write config
-          echo '{"token":"'$E3_TOKEN'","baseUrl":"'$E3_BASE_URL'","authMode":"token"}' > ~/.e3rc.json
-
-          # Copy exams file if exists in repo
-          if [ -f exams.json ]; then
-            cp exams.json ~/.e3-exams.json
+          # Try existing token first, login if expired
+          if [ -n "${{ secrets.E3_TOKEN }}" ]; then
+            echo '{"token":"${{ secrets.E3_TOKEN }}","baseUrl":"'"$E3_BASE_URL"'","authMode":"token"}' > ~/.e3rc.json
           fi
+
+          # Test if token works, if not, login with credentials
+          if ! node packages/cli/dist/bin/e3.js whoami 2>/dev/null; then
+            echo "Token expired, logging in..."
+            node packages/cli/dist/bin/e3.js login -u "$E3_USERNAME" -p "$E3_PASSWORD"
+          fi
+
+          # Copy exams config
+          [ -f exams.json ] && cp exams.json ~/.e3-exams.json
 
           # Generate ICS
           node packages/cli/dist/bin/e3.js calendar --ics public/e3-calendar.ics --ics-days 120
-
-          cat public/e3-calendar.ics | head -5
           echo "Events: $(grep -c 'BEGIN:VEVENT' public/e3-calendar.ics)"
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          keep_files: true
+      - name: Commit only if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet public/e3-calendar.ics 2>/dev/null; then
+            echo "No changes, skipping commit"
+          else
+            git add public/e3-calendar.ics
+            git commit -m "chore: update e3-calendar.ics [skip ci]"
+            git push
+          fi
