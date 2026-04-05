@@ -1,4 +1,4 @@
-# E3 Assistant
+# E3 CLI
 
 NYCU E3 LMS 助手工具 — CLI + Core Library。
 
